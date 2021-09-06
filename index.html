@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>RU Tools</title>
+    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="h-full flex flex-col">
+<h1 class="pt-7 px-5 text-2xl uppercase">WordPress plugin slug helper</h1>
+<div class="pb-4 flex w-full h-full">
+    <div class="container w-5/12">
+        <div class="w-full h-full flex flex-col">
+            <h2>Paste your WordPres plugin slugs hear (one on each line)</h2>
+            <textarea id="slugs-field" name="slugs" class="w-full flex-1"></textarea>
+            <button id="go-button" class="mt-5 rounded p-3 text-black text-3xl mt-3 w-full">GO</button>
+        </div>
+    </div>
+    <div class="w-7/12 pb-11">
+        <div class="container h-2/4">
+            <div class="flex justify-between">
+                <h2>Your BASH command</h2>
+                <div id="bash-cmd-copied-msg" class="hidden" style="color: #59ff00;">Copied to your clipboard</div>
+            </div>
+            <textarea id="output-for-bash-command" name="output" class="w-full h-full"></textarea>
+
+        </div>
+        <div class="container h-2/4">
+            <div class="flex justify-between">
+                <h2>Your JS command</h2>
+                <div id="js-cmd-copied-msg" class="hidden" style="color: #59ff00;">Copied to your clipboard</div>
+            </div>
+            <textarea id="output-for-js-command" name="output" class="w-full h-full"></textarea>
+        </div>
+    </div>
+</div>
+
+<textarea id="js-command-hidden" class="hidden">
+var pluginSlugsA = ["plugin-one", "plugin-two", "plugin-three"];
+
+var pluginLinkElements = document.querySelectorAll('.column-description .open-plugin-details-modal');
+
+var pluginSlugsB = [];
+
+for (const pluginLinkElement of pluginLinkElements) {
+    var url = new URL(pluginLinkElement.href);
+    pluginSlugsB.push(url.searchParams.get('plugin'));
+};
+
+function getCommonItems(array1, array2) {
+    var common = []; // Initialize array to contain common items
+    for (var i = 0; i < array1.length; i++) {
+        for (var j = 0; j < array2.length; j++) {
+            if (array1[i] == array2[j]) { // If item is present in both arrays
+                common.push(array1[i]); // Push to common array
+            }
+        }
+    }
+
+    return common; // Return the common items
+}
+
+var commonItemList= getCommonItems(pluginSlugsA, pluginSlugsB);
+console.log(commonItemList);
+</textarea>
+
+<script type="text/javascript" src="script.js"></script>
+</body>
+</html>
