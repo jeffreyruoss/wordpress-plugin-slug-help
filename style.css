@@ -30,4 +30,9 @@ textarea:focus {
 
 button {
     background: #005300;
+    transition: opacity 300ms ease;
+}
+
+button:hover {
+    opacity: 0.6;
 }
