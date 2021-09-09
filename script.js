@@ -70,19 +70,11 @@ goButton.addEventListener('click', (e)=> {
     process();
 });
 
+hotkeys('ctrl+enter, command+enter', function (event, handler) {
+    event.preventDefault();
+    process();
+});
 
-function cmdEnter(e) {
-    if (e.code === "MetaRight" && e.keyCode === 93 ) {
-        const goButton = document.getElementById('go-button');
-        process();
-    }
+hotkeys.filter = function(event){
+    return true;
 }
-
-document.addEventListener('keyup', cmdEnter, false);
-
-
-
-
-
-
-
