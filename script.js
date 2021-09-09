@@ -70,11 +70,9 @@ goButton.addEventListener('click', (e)=> {
     process();
 });
 
-hotkeys('ctrl+enter, command+enter', function (event, handler) {
-    event.preventDefault();
-    process();
+const slugsField = document.getElementById('slugs-field');
+slugsField.addEventListener('keydown', (e)=> {
+    if (e.key === 'Enter' && e.metaKey || e.key === 'Enter' && e.ctrlKey) {
+        process();
+    }
 });
-
-hotkeys.filter = function(event){
-    return true;
-}
