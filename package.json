@@ -16,8 +16,5 @@
   "bugs": {
     "url": "https://github.com/jeffreyruoss/wordpress-plugin-slug-help/issues"
   },
-  "homepage": "https://github.com/jeffreyruoss/wordpress-plugin-slug-help#readme",
-  "devDependencies": {
-    "live-server": "^1.2.1"
-  }
+  "homepage": "https://github.com/jeffreyruoss/wordpress-plugin-slug-help#readme"
 }
