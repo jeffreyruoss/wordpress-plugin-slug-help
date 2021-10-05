@@ -1,3 +1,15 @@
+const autoLineBreakOnPaste = function() {
+    const slugsField = document.getElementById('slugs-field');
+    slugsField.addEventListener('keydown', function(e) {
+       if (e.key === 'v' && e.metaKey || e.key === 'v' && e.ctrlKey) {
+           setTimeout(function() {
+               slugsField.value += '\r\n';
+           }, 10)
+       }
+    });
+}
+autoLineBreakOnPaste();
+
 const getSlugs = function() {
     const slugsField = document.getElementById('slugs-field');
     const slugsStr = slugsField.value.trim();
