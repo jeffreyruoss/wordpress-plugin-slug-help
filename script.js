@@ -17,51 +17,35 @@ const getSlugs = function() {
     return slugsStr.split('\n');
 }
 
-const createBashCommandCpanel = function(slugs) {
+const createBashCommand = function(slugs, serverType) {
     let command = '';
+    let path = '';
+    if (serverType === 'cpanel') {
+        path = '/home/**/public_html/wp-content/plugins/';
+    } else if (serverType === 'spinupwp') {
+        path = '/sites/**/files/wp-content/plugins/';
+    }
     slugs.map((slug, index)=>{
-        let str = `find /home/**/public_html/wp-content/plugins/ -type d -name "${slug}" -print`;
+        let str = `find ${path} -type d -name "${slug}" -print`;
         if (index + 1 !== slugs.length) {
             str += ' && \n';
         }
         command += str;
     });
-    const bashComandField = document.getElementById('output-for-bash-command-cpanel');
-    bashComandField.value = command;
-    navigator.clipboard.writeText(command)
-        .then(() => {
-            console.log('bash command copied to clipboard (cpanel)');
-            const bashCmdCopiedMsg = document.getElementById('bash-cmd-copied-msg-cpanel');
-            bashCmdCopiedMsg.style.display = 'block';
-        })
-        .catch(err => {
-            // This can happen if the user denies clipboard permissions:
-            console.error('Could not copy bash command to clipboard: ', err);
-        });
-}
-
-const createBashCommandSpinupwp = function(slugs) {
-    let command = '';
-    slugs.map((slug, index)=>{
-        let str = `find /sites/**/files/wp-content/plugins/ -type d -name "${slug}" -print`;
-        if (index + 1 !== slugs.length) {
-            str += ' && \n';
-        }
-        command += str;
-    });
-    const bashComandField = document.getElementById('output-for-bash-command-spinupwp');
+    const bashComandField = document.getElementById(`output-for-bash-command-${serverType}`);
     bashComandField.value = command;
     navigator.clipboard.writeText(command)
       .then(() => {
-          console.log('bash command copied to clipboard (spinupwp)');
-          const bashCmdCopiedMsg = document.getElementById('bash-cmd-copied-msg-spinupwp');
+          console.log(`bash command copied to clipboard (${serverType})`);
+          const bashCmdCopiedMsg = document.getElementById(`bash-cmd-copied-msg-${serverType}`);
           bashCmdCopiedMsg.style.display = 'block';
       })
       .catch(err => {
           // This can happen if the user denies clipboard permissions:
-          console.error('Could not copy bash command to clipboard: ', err);
+          console.error(`Could not copy bash command (${serverType}) to clipboard: `, err);
       });
 }
+
 
 const createJSCommand = function(slugs) {
     let slugsVar = 'var pluginSlugsA = [';
@@ -93,10 +77,10 @@ const createJSCommand = function(slugs) {
 const process = function() {
     const slugs = getSlugs();
     setTimeout(function(){
-        createBashCommandCpanel(slugs);
+        createBashCommand(slugs, 'cpanel');
     },100);
     setTimeout(function(){
-        createBashCommandSpinupwp(slugs);
+        createBashCommand(slugs, 'spinupwp');
     },500);
     setTimeout(function(){
         createJSCommand(slugs);
