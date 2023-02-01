@@ -52,30 +52,41 @@
 <textarea id="js-command-hidden" class="hidden">
 var pluginSlugsA = ["plugin-one", "plugin-two", "plugin-three"];
 
-var pluginLinkElements = document.querySelectorAll('.column-description .open-plugin-details-modal');
+// get the tr elements from the plugins table in the wp-admin dashboard plugins page
+var plugins = document.querySelectorAll('table.wp-list-table.plugins > tbody > tr[data-slug]:not(.plugin-update-tr)');
 
+// get the plugin slugs from the data-slug attribute from the tr elements
 var pluginSlugsB = [];
-
-for (const pluginLinkElement of pluginLinkElements) {
-    var url = new URL(pluginLinkElement.href);
-    pluginSlugsB.push(url.searchParams.get('plugin'));
-};
-
-function getCommonItems(array1, array2) {
-    var common = []; // Initialize array to contain common items
-    for (var i = 0; i < array1.length; i++) {
-        for (var j = 0; j < array2.length; j++) {
-            if (array1[i] == array2[j]) { // If item is present in both arrays
-                common.push(array1[i]); // Push to common array
-            }
-        }
-    }
-
-    return common; // Return the common items
+for (const plugin of plugins) {
+  var pluginSlug = plugin.dataset.slug;
+  var pluginDirFile = plugin.dataset.plugin;
+  pluginDirFile = pluginDirFile.split("/")[0];
+  pluginSlugsB.push(pluginDirFile);
+  pluginSlugsB.push(pluginSlug);
 }
 
-var commonItemList= getCommonItems(pluginSlugsA, pluginSlugsB);
-console.log(commonItemList);
+console.log(pluginSlugsB.length / 2);
+
+function getCommonItems(array1, array2) {
+  var common = []; // Initialize array to contain common items
+  for (var i = 0; i < array1.length; i++) {
+    for (var j = 0; j < array2.length; j++) {
+      if (array1[i] == array2[j]) { // If item is present in both arrays
+        common.push(array1[i]); // Push to common array
+      }
+    }
+  }
+
+  return common; // Return the common items
+}
+
+function removeDuplicates(array) {
+  return array.filter((a, b) => array.indexOf(a) === b)
+}
+
+var commonItemList = getCommonItems(pluginSlugsA, pluginSlugsB);
+console.log(removeDuplicates(commonItemList));
+
 </textarea>
 
 <script type="text/javascript" src="script.js"></script>
