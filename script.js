@@ -12,9 +12,8 @@ autoLineBreakOnPaste();
 
 const getSlugs = function() {
     const slugsField = document.getElementById('slugs-field');
-    const slugsStr = slugsField.value.trim();
-
-    return slugsStr.split('\n');
+    let slugs = slugsField.value.trim();
+    return slugs.replace(/\r?\n|\r/g, ',');
 }
 
 const createBashCommand = function(slugs, serverType) {
@@ -25,13 +24,13 @@ const createBashCommand = function(slugs, serverType) {
     } else if (serverType === 'spinupwp') {
         path = '/sites/**/files/wp-content/plugins/';
     }
-    slugs.map((slug, index)=>{
-        let str = `find ${path} -type d -name "${slug}" -print`;
-        if (index + 1 !== slugs.length) {
-            str += ' && \n';
-        }
-        command += str;
-    });
+
+    slugs = slugs.replace(/,/g, ' ');
+
+    command = 'files=('+slugs+')\nfor file in "${files[@]}"; do\n';
+    command += '    find '+path+' -type d -name "$file" -print\n';
+    command += 'done';
+
     const bashComandField = document.getElementById(`output-for-bash-command-${serverType}`);
     bashComandField.value = command;
     navigator.clipboard.writeText(command)
@@ -48,15 +47,7 @@ const createBashCommand = function(slugs, serverType) {
 
 
 const createJSCommand = function(slugs) {
-    let slugsVar = 'var pluginSlugsA = [';
-    slugs.map((slug, index)=>{
-        let str = `\"${slug}\"`;
-        if (index + 1 !== slugs.length) {
-            str += ' , ';
-        }
-        slugsVar += str;
-    });
-    slugsVar += '];'
+    let slugsVar = `var pluginSlugsA = [${slugs}];`;
     const jsCommandField = document.getElementById('output-for-js-command');
     const jsCommandHiddenField = document.getElementById('js-command-hidden');
     let jsCommandHiddenFieldValue = jsCommandHiddenField.value;
