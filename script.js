@@ -47,6 +47,9 @@ const createBashCommand = function(slugs, serverType) {
 
 
 const createJSCommand = function(slugs) {
+    slugs = slugs.replace(/,/g, '","');
+    slugs = '"'+slugs+'"';
+    console.log('slugs', slugs);
     let slugsVar = `var pluginSlugsA = [${slugs}];`;
     const jsCommandField = document.getElementById('output-for-js-command');
     const jsCommandHiddenField = document.getElementById('js-command-hidden');
