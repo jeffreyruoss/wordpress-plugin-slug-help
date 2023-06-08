@@ -9,7 +9,7 @@
     <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="h-full flex flex-col">
+<body class="flex flex-col">
 <h1 class="pt-7 px-5 text-2xl uppercase">WordPress plugin slug helper</h1>
 <div class="pb-4 flex w-full h-full">
     <div class="container w-5/12">
@@ -90,14 +90,26 @@ console.log(removeDuplicates(commonItemList));
 </textarea>
 
 <div class="pb-4 flex">
-    <div class="container">
+    <div class="container w-3/4">
         <h2>Site name paths to bash vars INPUT</h2>
-        <textarea name="" id="site-name-full-path-input" class="w-full"></textarea>
-        <button id="site-names-go-button" class="mt-5 rounded p-3 text-black text-3xl mt-3 w-full flex justify-center items-center shadow-md">GO</button>
+        <textarea name="" id="site-name-full-path-input" class="w-full placeholder" onclick="clearPlaceholderText(this)" data-initial-click="true">
+/home/username/public_html/site1.com/wp-content/plugins/plugin-one
+/home/username/public_html/site2.com/wp-content/plugins/plugin-one
+/home/username/public_html/site3.com/wp-content/plugins/plugin-one
+        </textarea>
+        <button id="site-names-go-button" class="mt-5 rounded py-3 px-10 text-black text-3xl mt-3 flex justify-center items-center shadow-md">
+            <span style="color: #00ff00">GO</span>
+        </button>
     </div>
-    <div class="container">
+    <div class="container w-1/4">
         <h2>OUTPUT</h2>
-        <textarea name="" id="site-name-output" class="w-full"></textarea>
+        <textarea name="" id="site-name-output" class="w-full placeholder">
+sites=(
+    "site1.com"
+    "site2.com"
+    "site3.com
+)
+        </textarea>
     </div>
 </div>
 

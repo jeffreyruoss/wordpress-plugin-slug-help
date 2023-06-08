@@ -36,3 +36,7 @@ button {
 button:hover {
     opacity: 0.6;
 }
+
+.placeholder {
+    color: #003a00;
+}

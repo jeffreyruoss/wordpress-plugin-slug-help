@@ -109,7 +109,9 @@ const sitesNamePathToBashVars = function() {
         }
         output += ')';
         
-        document.getElementById('site-name-output').value = output;
+        const siteNameOutput = document.getElementById('site-name-output');
+        siteNameOutput.value = output;
+        siteNameOutput.classList.remove('placeholder');
         
         // Copy to clipboard
         navigator.clipboard.writeText(output).then(function() {
@@ -120,3 +122,11 @@ const sitesNamePathToBashVars = function() {
     });   
 }
 sitesNamePathToBashVars();
+
+function clearPlaceholderText(textarea) {
+    if (textarea.dataset.initialClick === "true") {
+        textarea.value = "";
+        textarea.dataset.initialClick = "false";
+        textarea.classList.remove('placeholder');
+    }
+}
