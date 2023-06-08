@@ -92,3 +92,31 @@ slugsField.addEventListener('keydown', (e)=> {
         process();
     }
 });
+
+const sitesNamePathToBashVars = function() {
+    document.getElementById('site-names-go-button').addEventListener('click', function() {
+        var inputText = document.getElementById('site-name-full-path-input').value;
+        var lines = inputText.split('\n');
+        
+        var siteNames = lines.map(function(line) {
+            return line.split('/')[2];  // assuming your site names are always at the second position after splitting by '/'
+        });
+        
+        // construct the output string
+        var output = 'sites=(\n';
+        for(var i = 0; i < siteNames.length; i++) {
+            output += '  "' + siteNames[i] + '"\n';
+        }
+        output += ')';
+        
+        document.getElementById('site-name-output').value = output;
+        
+        // Copy to clipboard
+        navigator.clipboard.writeText(output).then(function() {
+            console.log('Copying to clipboard was successful!');
+        }, function(err) {
+            console.error('Could not copy text: ', err);
+        });
+    });   
+}
+sitesNamePathToBashVars();
