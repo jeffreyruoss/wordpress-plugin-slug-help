@@ -55,8 +55,6 @@ const createBashCommand = function(slugs, serverType) {
       });
 }
 
-
-
 const createJSCommand = function(slugs) {
     slugs = slugs.replace(/,/g, '","');
     slugs = '"'+slugs+'"';
@@ -91,6 +89,34 @@ const process = function() {
         createJSCommand(slugs);
     },1000);
 }
+
+const saveSlugsToLocalStorage = (slugs) => {
+    localStorage.setItem('ru-tools-slugs', slugs);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('DOMContentLoaded');
+    // if a user types in the slugs field, run saveSlugsToLocalStorage(slugs);
+    const slugsField = document.getElementById('slugs-field');
+    slugsField.addEventListener('keyup', (e)=> {
+        console.log('keyup');
+        const slugs = getSlugs();
+        saveSlugsToLocalStorage(slugs);
+    });
+});
+
+const loadSlugsFromLocalStorage = () => {
+    const slugs = localStorage.getItem('ru-tools-slugs');
+    if (slugs) {
+        const slugsOnNewLines = slugs.replace(/,/g, '\n');
+        console.log('slugs', slugsOnNewLines);
+        const slugsField = document.getElementById('slugs-field');
+        slugsField.value = slugsOnNewLines;
+        slugsField.classList.remove('placeholder');
+        slugsField.setAttribute('data-initial-click', 'false');
+    }
+}
+document.addEventListener('DOMContentLoaded', loadSlugsFromLocalStorage);
 
 const goButton = document.getElementById('go-button');
 goButton.addEventListener('click', (e)=> {
