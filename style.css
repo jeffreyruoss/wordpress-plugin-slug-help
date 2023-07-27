@@ -43,7 +43,7 @@ button:hover {
 
 #sites-and-plugins-data {
     border-radius: 15px;
-    padding: 7px 15px 15px;
+    padding: 0px 15px 15px;
     background-color: #082607;
     background-color: #031703;
     color: #34c234;
@@ -54,4 +54,15 @@ button:hover {
         color: #fff;
         margin-top: 15px;
     }
+    & h3 span {
+        color: rgb(255, 255, 92);
+    }
+    & a {
+        color: gray;
+        text-decoration: underline;
+    }
+}
+.control-panel-guide {
+    padding: 15px;
+    color: #427342;
 }

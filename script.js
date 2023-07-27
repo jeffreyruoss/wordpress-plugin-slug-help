@@ -198,11 +198,13 @@ const sitesNamePathToBashVars2 = () => {
         for (let plugin in data) {
             let pluginDiv = document.createElement('div');
             pluginDiv.classList.add('plugin');
-            pluginDiv.innerHTML = `<h3>${plugin}</h3>`;
+            pluginDiv.innerHTML = `<h3>${plugin} <span>(${data[plugin].length})</span></h3>`;
+            pluginDiv.innerHTML += `<a href="#" class="cp-copy-sites">Copy sites</a>`;
             data[plugin].forEach(site => {
                 pluginDiv.innerHTML += `<p>${site}</p>`;
             });
             sitesAndPluginsDataDiv.appendChild(pluginDiv);
+            cpCopySitesHandler(pluginDiv);
         }
     };
     populate();
@@ -219,4 +221,29 @@ function clearPlaceholderText(textarea) {
         textarea.dataset.initialClick = "false";
         textarea.classList.remove('placeholder');
     }
+}
+
+
+
+/** CONTROL PANEL COMMANDS */
+const cpCopySites = (e) => {
+    e.preventDefault();
+    let sites = e.target.parentNode.querySelectorAll('p');
+    let sitesArray = [];
+    sites.forEach(site => {
+        sitesArray.push('\t"' + site.innerText + '"');  // Added a tab character at the beginning of each line for indentation
+    });
+    let sitesString = "sites=(\n" + sitesArray.join('\n') + "\n)";  // Add sites=( at the beginning and ) at the end
+    navigator.clipboard.writeText(sitesString).then(function() {
+        console.log('Copying to clipboard was successful!');
+    }
+    , function(err) {
+        console.error('Could not copy text: ', err);
+    });
+}
+
+
+const cpCopySitesHandler = (pluginDiv) => {
+    const cpCopySitesLink = pluginDiv.querySelector('.cp-copy-sites');
+    cpCopySitesLink.addEventListener('click', cpCopySites);
 }
