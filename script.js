@@ -4,7 +4,7 @@ const autoLineBreakOnPaste = function() {
        if (e.key === 'v' && e.metaKey || e.key === 'v' && e.ctrlKey) {
            setTimeout(function() {
                slugsField.value += '\r\n';
-           }, 10)
+           }, 100)
        }
     });
 }
@@ -20,15 +20,25 @@ const createBashCommand = function(slugs, serverType) {
     let command = '';
     let path = '';
     if (serverType === 'cpanel') {
-        path = '/home/**/public_html/wp-content/plugins/';
+        path = '/home/*/public_html/';
     } else if (serverType === 'spinupwp') {
-        path = '/sites/**/files/wp-content/plugins/';
+        path = '/sites/*/files/';
     }
 
     slugs = slugs.replace(/,/g, ' ');
 
-    command = 'files=('+slugs+')\nfor file in "${files[@]}"; do\n';
-    command += '    find '+path+' -type d -name "$file" -print\n';
+    command = `# RU Tools - Find Plugins - ${serverType}\n`;
+    command += 'files=(' + slugs + ')\n';
+    command += `for dir in ${path}; do\n`;
+    command += '    for plugin_dir in "$dir"wp-content/plugins/; do\n';
+    command += '        if [[ -d "$plugin_dir" ]]; then\n';
+    command += '            for file in "${files[@]}"; do\n';
+    command += '                if [[ -d "$plugin_dir$file" ]]; then\n';
+    command += '                    echo "$plugin_dir$file"\n';
+    command += '                fi\n';
+    command += '            done\n';
+    command += '        fi\n';
+    command += '    done\n';
     command += 'done';
 
     const bashComandField = document.getElementById(`output-for-bash-command-${serverType}`);
@@ -44,6 +54,7 @@ const createBashCommand = function(slugs, serverType) {
           console.error(`Could not copy bash command (${serverType}) to clipboard: `, err);
       });
 }
+
 
 
 const createJSCommand = function(slugs) {
