@@ -40,3 +40,18 @@ button:hover {
 .placeholder {
     color: #003a00;
 }
+
+#sites-and-plugins-data {
+    border-radius: 15px;
+    padding: 7px 15px 15px;
+    background-color: #082607;
+    background-color: #031703;
+    color: #34c234;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    grid-gap: 1em;
+    & h3 {
+        color: #fff;
+        margin-top: 15px;
+    }
+}

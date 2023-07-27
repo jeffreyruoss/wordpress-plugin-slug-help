@@ -58,7 +58,6 @@ const createBashCommand = function(slugs, serverType) {
 const createJSCommand = function(slugs) {
     slugs = slugs.replace(/,/g, '","');
     slugs = '"'+slugs+'"';
-    console.log('slugs', slugs);
     let slugsVar = `var pluginSlugsA = [${slugs}];`;
     const jsCommandField = document.getElementById('output-for-js-command');
     const jsCommandHiddenField = document.getElementById('js-command-hidden');
@@ -95,7 +94,6 @@ const saveSlugsToLocalStorage = (slugs) => {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('DOMContentLoaded');
     // if a user types in the slugs field, run saveSlugsToLocalStorage(slugs);
     const slugsField = document.getElementById('slugs-field');
     slugsField.addEventListener('keyup', (e)=> {
@@ -109,7 +107,6 @@ const loadSlugsFromLocalStorage = () => {
     const slugs = localStorage.getItem('ru-tools-slugs');
     if (slugs) {
         const slugsOnNewLines = slugs.replace(/,/g, '\n');
-        console.log('slugs', slugsOnNewLines);
         const slugsField = document.getElementById('slugs-field');
         slugsField.value = slugsOnNewLines;
         slugsField.classList.remove('placeholder');
@@ -159,6 +156,62 @@ const sitesNamePathToBashVars = function() {
     });   
 }
 sitesNamePathToBashVars();
+
+const sitesNamePathToBashVars2 = () => {
+    console.log('sitesNamePathToBashVars2');
+    // save value of textarea#site-name-full-path-input-2 to local storage
+    const siteNameFullPathInput2 = document.getElementById('site-name-full-path-input-2');
+    siteNameFullPathInput2.addEventListener('keyup', (e)=> {
+        const value = siteNameFullPathInput2.value;
+        localStorage.setItem('ru-tools-site-name-full-path-input-2', value);
+    });
+
+    // load value of textarea#site-name-full-path-input-2 from local storage
+    const siteNameFullPathInput2Value = localStorage.getItem('ru-tools-site-name-full-path-input-2');
+    if (siteNameFullPathInput2Value) {
+        siteNameFullPathInput2.value = siteNameFullPathInput2Value;
+        siteNameFullPathInput2.classList.remove('placeholder');
+        siteNameFullPathInput2.setAttribute('data-initial-click', 'false');
+    }
+
+    const populate = () => {
+        let pathLines = siteNameFullPathInput2.value.split('\n');
+        let data = {};
+
+        pathLines.forEach(line => {
+            let parts = line.split('/');
+            let site = parts[2]; // assuming site name is always at 3rd position
+            let plugin = parts[parts.length - 1]; // last part is plugin name
+
+            if (!data[plugin]) {
+                data[plugin] = [];
+            }
+
+            if (!data[plugin].includes(site)) {
+                data[plugin].push(site);
+            }
+        });
+
+        let sitesAndPluginsDataDiv = document.getElementById('sites-and-plugins-data');
+        sitesAndPluginsDataDiv.innerHTML = '';
+
+        for (let plugin in data) {
+            let pluginDiv = document.createElement('div');
+            pluginDiv.classList.add('plugin');
+            pluginDiv.innerHTML = `<h3>${plugin}</h3>`;
+            data[plugin].forEach(site => {
+                pluginDiv.innerHTML += `<p>${site}</p>`;
+            });
+            sitesAndPluginsDataDiv.appendChild(pluginDiv);
+        }
+    };
+    populate();
+
+    // on key up in textarea#site-name-full-path-input-2, run populate()
+    siteNameFullPathInput2.addEventListener('keyup', populate);
+}
+document.addEventListener('DOMContentLoaded', sitesNamePathToBashVars2);
+
 
 function clearPlaceholderText(textarea) {
     if (textarea.dataset.initialClick === "true") {
