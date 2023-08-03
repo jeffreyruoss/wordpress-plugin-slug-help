@@ -56,6 +56,7 @@ plugin-three
 <textarea id="js-command-hidden" class="hidden">
 // RU Tools - Find plugins js
 var pluginSlugsA = ["plugin-one", "plugin-two", "plugin-three"];
+console.log(pluginSlugsA);
 
 // get the tr elements from the plugins table in the wp-admin dashboard plugins page
 var plugins = document.querySelectorAll('table.wp-list-table.plugins > tbody > tr[data-slug]:not(.plugin-update-tr)');
@@ -133,7 +134,8 @@ sites=(
     <div class="container max-w-full">
         <div class="control-panel-guide">
             <p>Click a website to copy it to the clipboard (coming soon)</p>
-            <p>Click "Copy sites" to copy all the sites of the plugin into an array for BASH</p>
+            <p><strong>Copy sites</strong>: copy all the sites of the plugin into an array for BASH</p>
+            <p><strong>Copy versions command</strong>: copy the command to get the plugin versions BASH for those sites</p>
         </div>
         <div id="sites-and-plugins-data"></div>
     </div>
