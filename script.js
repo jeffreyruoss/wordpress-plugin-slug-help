@@ -1,22 +1,22 @@
-const autoLineBreakOnPaste = function() {
+const autoLineBreakOnPaste = function () {
     const slugsField = document.getElementById('slugs-field');
-    slugsField.addEventListener('keydown', function(e) {
-       if (e.key === 'v' && e.metaKey || e.key === 'v' && e.ctrlKey) {
-           setTimeout(function() {
-               slugsField.value += '\r\n';
-           }, 100)
-       }
+    slugsField.addEventListener('keydown', function (e) {
+        if (e.key === 'v' && e.metaKey || e.key === 'v' && e.ctrlKey) {
+            setTimeout(function () {
+                slugsField.value += '\r\n';
+            }, 100)
+        }
     });
 }
 autoLineBreakOnPaste();
 
-const getSlugs = function() {
+const getSlugs = function () {
     const slugsField = document.getElementById('slugs-field');
     let slugs = slugsField.value.trim();
     return slugs.replace(/\r?\n|\r/g, ',');
 }
 
-const createBashCommand = function(slugs, serverType) {
+const createBashCommand = function (slugs, serverType) {
     let command = '';
     let path = '';
     if (serverType === 'cpanel') {
@@ -44,25 +44,25 @@ const createBashCommand = function(slugs, serverType) {
     const bashComandField = document.getElementById(`output-for-bash-command-${serverType}`);
     bashComandField.value = command;
     navigator.clipboard.writeText(command)
-      .then(() => {
-          console.log(`bash command copied to clipboard (${serverType})`);
-          const bashCmdCopiedMsg = document.getElementById(`bash-cmd-copied-msg-${serverType}`);
-          bashCmdCopiedMsg.style.display = 'block';
-      })
-      .catch(err => {
-          // This can happen if the user denies clipboard permissions:
-          console.error(`Could not copy bash command (${serverType}) to clipboard: `, err);
-      });
+        .then(() => {
+            console.log(`bash command copied to clipboard (${serverType})`);
+            const bashCmdCopiedMsg = document.getElementById(`bash-cmd-copied-msg-${serverType}`);
+            bashCmdCopiedMsg.style.display = 'block';
+        })
+        .catch(err => {
+            // This can happen if the user denies clipboard permissions:
+            console.error(`Could not copy bash command (${serverType}) to clipboard: `, err);
+        });
 }
 
-const createJSCommand = function(slugs) {
+const createJSCommand = function (slugs) {
     slugs = slugs.replace(/,/g, '","');
-    slugs = '"'+slugs+'"';
+    slugs = '"' + slugs + '"';
     let slugsVar = `var pluginSlugsA = [${slugs}];`;
     const jsCommandField = document.getElementById('output-for-js-command');
     const jsCommandHiddenField = document.getElementById('js-command-hidden');
     let jsCommandHiddenFieldValue = jsCommandHiddenField.value;
-    let command = jsCommandHiddenFieldValue.replace('var pluginSlugsA = ["plugin-one", "plugin-two", "plugin-three"];',slugsVar);
+    let command = jsCommandHiddenFieldValue.replace('var pluginSlugsA = ["plugin-one", "plugin-two", "plugin-three"];', slugsVar);
     jsCommandField.value = command;
     navigator.clipboard.writeText(command)
         .then(() => {
@@ -76,17 +76,17 @@ const createJSCommand = function(slugs) {
         });
 }
 
-const process = function() {
+const process = function () {
     const slugs = getSlugs();
-    setTimeout(function(){
+    setTimeout(function () {
         createBashCommand(slugs, 'cpanel');
-    },100);
-    setTimeout(function(){
+    }, 100);
+    setTimeout(function () {
         createBashCommand(slugs, 'spinupwp');
-    },500);
-    setTimeout(function(){
+    }, 500);
+    setTimeout(function () {
         createJSCommand(slugs);
-    },1000);
+    }, 1000);
 }
 
 const saveSlugsToLocalStorage = (slugs) => {
@@ -96,7 +96,7 @@ const saveSlugsToLocalStorage = (slugs) => {
 document.addEventListener('DOMContentLoaded', () => {
     // if a user types in the slugs field, run saveSlugsToLocalStorage(slugs);
     const slugsField = document.getElementById('slugs-field');
-    slugsField.addEventListener('keyup', (e)=> {
+    slugsField.addEventListener('keyup', (e) => {
         console.log('keyup');
         const slugs = getSlugs();
         saveSlugsToLocalStorage(slugs);
@@ -116,44 +116,44 @@ const loadSlugsFromLocalStorage = () => {
 document.addEventListener('DOMContentLoaded', loadSlugsFromLocalStorage);
 
 const goButton = document.getElementById('go-button');
-goButton.addEventListener('click', (e)=> {
+goButton.addEventListener('click', (e) => {
     process();
 });
 
 const slugsField = document.getElementById('slugs-field');
-slugsField.addEventListener('keydown', (e)=> {
+slugsField.addEventListener('keydown', (e) => {
     if (e.key === 'Enter' && e.metaKey || e.key === 'Enter' && e.ctrlKey) {
         process();
     }
 });
 
-const sitesNamePathToBashVars = function() {
-    document.getElementById('site-names-go-button').addEventListener('click', function() {
+const sitesNamePathToBashVars = function () {
+    document.getElementById('site-names-go-button').addEventListener('click', function () {
         var inputText = document.getElementById('site-name-full-path-input').value;
         var lines = inputText.split('\n');
-        
-        var siteNames = lines.map(function(line) {
+
+        var siteNames = lines.map(function (line) {
             return line.split('/')[2];  // assuming your site names are always at the second position after splitting by '/'
         });
-        
+
         // construct the output string
         var output = 'sites=(\n';
-        for(var i = 0; i < siteNames.length; i++) {
+        for (var i = 0; i < siteNames.length; i++) {
             output += '  "' + siteNames[i] + '"\n';
         }
         output += ')';
-        
+
         const siteNameOutput = document.getElementById('site-name-output');
         siteNameOutput.value = output;
         siteNameOutput.classList.remove('placeholder');
-        
+
         // Copy to clipboard
-        navigator.clipboard.writeText(output).then(function() {
+        navigator.clipboard.writeText(output).then(function () {
             console.log('Copying to clipboard was successful!');
-        }, function(err) {
+        }, function (err) {
             console.error('Could not copy text: ', err);
         });
-    });   
+    });
 }
 sitesNamePathToBashVars();
 
@@ -161,7 +161,7 @@ const sitesNamePathToBashVars2 = () => {
     console.log('sitesNamePathToBashVars2');
     // save value of textarea#site-name-full-path-input-2 to local storage
     const siteNameFullPathInput2 = document.getElementById('site-name-full-path-input-2');
-    siteNameFullPathInput2.addEventListener('keyup', (e)=> {
+    siteNameFullPathInput2.addEventListener('keyup', (e) => {
         const value = siteNameFullPathInput2.value;
         localStorage.setItem('ru-tools-site-name-full-path-input-2', value);
     });
@@ -192,6 +192,8 @@ const sitesNamePathToBashVars2 = () => {
             }
         });
 
+        const wordFenceUrl = 'https://www.wordfence.com/threat-intel/vulnerabilities/search?search=';
+
         let sitesAndPluginsDataDiv = document.getElementById('sites-and-plugins-data');
         sitesAndPluginsDataDiv.innerHTML = '';
 
@@ -202,6 +204,7 @@ const sitesNamePathToBashVars2 = () => {
             pluginDiv.innerHTML = `<h3>${plugin} <span>(${data[plugin].length})</span></h3>`;
             pluginDiv.innerHTML += `<div><a href="#" class="cp-copy-sites">Copy sites</a></div>`;
             pluginDiv.innerHTML += `<div><a href="#" class="cp-copy-versions-command">Copy versions command</a></div>`;
+            pluginDiv.innerHTML += `<div><a href="${wordFenceUrl}${plugin}" target="_blank" class="cp-go-to-wordfence-page">Go to WordFence page</a></div>`;
             data[plugin].forEach(site => {
                 pluginDiv.innerHTML += `<p>${site}</p>`;
             });
@@ -247,13 +250,13 @@ const cpCopySites = (e) => {
         sitesArray.push('\t"' + site.innerText + '"');  // Added a tab character at the beginning of each line for indentation
     });
     let sitesString = "sites=(\n" + sitesArray.join('\n') + "\n)";  // Add sites=( at the beginning and ) at the end
-    navigator.clipboard.writeText(sitesString).then(function() {
+    navigator.clipboard.writeText(sitesString).then(function () {
         console.log('Copying to clipboard was successful!');
         cpCopyAddCheckMark(e);
     }
-    , function(err) {
-        console.error('Could not copy text: ', err);
-    });
+        , function (err) {
+            console.error('Could not copy text: ', err);
+        });
 }
 
 const cpCopySitesHandler = (pluginDiv) => {
@@ -272,16 +275,16 @@ const cpCopyVersionsCommand = (e) => {
     let sitesString = "sites=(\n" + sitesArray.join('\n') + "\n)";  // Add sites=( at the beginning and ) at the end
     console.log(sitesString);
     let command = 'sites=(\n' + sitesArray.join('\n') + '\n)\n' +
-                  'plugin_name="' + plugin + '"\n' +
-                  'for site in "${sites[@]}"; do\n' +
-                  '\tcd /home/"$site"/public_html\n' +
-                  '\tplugin_version=$(sudo -u "$(stat -c "%U" ./)" -i -- wp --path="public_html" plugin get $plugin_name --field=version)\n' +
-                  '\techo "PLUGIN: $plugin_name | SITE: $site | VERSION: $plugin_version"\n' +
-                  'done';
-    navigator.clipboard.writeText(command).then(function() {
+        'plugin_name="' + plugin + '"\n' +
+        'for site in "${sites[@]}"; do\n' +
+        '\tcd /home/"$site"/public_html\n' +
+        '\tplugin_version=$(sudo -u "$(stat -c "%U" ./)" -i -- wp --path="public_html" plugin get $plugin_name --field=version)\n' +
+        '\techo "PLUGIN: $plugin_name | SITE: $site | VERSION: $plugin_version"\n' +
+        'done';
+    navigator.clipboard.writeText(command).then(function () {
         console.log('Copying to clipboard was successful!');
         cpCopyAddCheckMark(e);
-    }, function(err) {
+    }, function (err) {
         console.error('Could not copy text: ', err);
     });
 }
